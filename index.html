@@ -81,32 +81,20 @@
            
             50%{background: linear-gradient(to left,
              rgb(255, 52, 179),rgb(0,100,255));}
-           
-            
-
-
         }
-
     </style>
-
-
 </head>
 <body>
-   
     <div class = "points">
         <h1 id="blackPoints"></h1>
         <h1 id= "space"> &nbsp|&nbsp  </h1>
-        <h1 id="whitePoints"></h1>
-        
-    </div> 
-    
-    <canvas id="stage" width="900" height="480"></canvas>
-   
+        <h1 id="whitePoints"></h1>    
+    </div>   
+    <canvas id="stage" width="900" height="480"></canvas>  
     <div id="myDiv">
         <h2>Press 'ENTER' to START &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Press 'SPACE' to PAUSE</h2>
         
     </div>
-
     <script defer>
 
 class Paddle{
@@ -267,16 +255,8 @@ switch(event.keyCode){
 }
 
 });
-
-
 }
        }
-
-       
-        
-
-
-
     class Ball{
         
         constructor(stageWidth, stageHeight){
@@ -333,8 +313,7 @@ switch(event.keyCode){
                     this.initialXSpeed = 16;
             if(this.initialXSpeed < -16)
                     this.initialXSpeed = -16;        
-            
-
+          
         }
 
         changeYDirection(){
@@ -375,18 +354,14 @@ switch(event.keyCode){
                 if(this.position.x < 0){
 
                         w++;
-                        whitePoints.innerText = w ;
-
-                       
+                        whitePoints.innerText = w ;                   
                 }   
 
                 if(this.position.x > this.stageWidth){
                    
                         b++;                      
-                        blackPoints.innerText = b ;
-                        
-                }   
-                
+                        blackPoints.innerText = b ;                      
+                }                 
             } 
             checkRestart(){
                     if(this.position.x < 0 || this.position.x > this.stageWidth){
@@ -395,12 +370,8 @@ switch(event.keyCode){
                         this.position.y = this.initialYPosition;
                         this.initialXSpeed = this.maxSpeed;
                         this.initialYSpeed = this.maxSpeed;
-
                     }
-
-            }
-            
-        
+            }                   
         }
 
 
@@ -457,9 +428,7 @@ switch(event.keyCode){
             }
     
         gameLoop();
-        new InputHandler(ball,paddle1,paddle2);
- 
-           
+        new InputHandler(ball,paddle1,paddle2);         
     </script>
 </body>
 </html>
