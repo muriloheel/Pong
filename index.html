@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong ;)</title>
+
+    <style>
+        
+        body{
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(to left, black, #ccc);
+        }
+
+      
+        #stage{
+            background: linear-gradient(to left, rgb(103, 22, 179),rgb(0,255,255));
+            border-left: 5px solid black;
+            border-right: 5px solid white;
+            border-top: 2px solid red;
+            border-bottom: 2px solid red;
+            border-radius: 1%;
+            margin: 4px;
+            animation: myColorAnimation;
+            animation-duration: 60s;
+	        animation-iteration-count: infinite;
+        }
+
+        #myDiv{
+            display: flex;
+            justify-content: center;
+
+            font-family: Ink Free, sans-serif;
+            font-size: 15px;
+            border: 1px solid white;
+            margin: 0px;
+            color: yellow;
+            background-color: #777;
+            padding: 0px;
+        }
+
+        .points{
+            display: flex;
+            justify-content: center;
+            font-family: MV Boli, sans-serif;
+            font-size: 13px;  
+            padding: 0px;
+          
+        }
+
+        #blackPoints{
+            color: black;
+        }
+
+        #whitePoints{
+            color: white;
+        }
+
+        #space{
+            color: red;
+        }
+
+        @keyframes myColorAnimation{
+            0%{background: linear-gradient(to left,
+             rgb(103, 22, 179), rgb(0,255,255));}
+            
+            10%{background: linear-gradient(to left,
+             rgb(140, 22, 179),rgb(10,225,255));}
+            
+            20%{background: linear-gradient(to left,
+             rgb(170, 22, 179),rgb(0,200,255));}
+           
+            30%{background: linear-gradient(to left,
+             rgb(200, 40, 179),rgb(0,170,255));}
+            
+            40%{background: linear-gradient(to left,
+             rgb(220, 60, 179),rgb(0,130,200));}
+           
+            50%{background: linear-gradient(to left,
+             rgb(255, 52, 179),rgb(0,100,255));}
+           
+            
+
+
+        }
+
+    </style>
+
+
+</head>
+<body>
+   
+    <div class = "points">
+        <h1 id="blackPoints"></h1>
+        <h1 id= "space"> &nbsp|&nbsp  </h1>
+        <h1 id="whitePoints"></h1>
+        
+    </div> 
+    
+    <canvas id="stage" width="900" height="480"></canvas>
+   
+    <div id="myDiv">
+        <h2>Press 'ENTER' to START &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Press 'SPACE' to PAUSE</h2>
+        
+    </div>
+
+    <script defer>
+
+class Paddle{
+
+constructor(stageHeight,id){
+   
+    this.id = id;
+
+    this.stageWidth = 900;
+
+    this.stageHeight = 480;
+
+
+    this.width = 20;
+    
+    this.height = 130;
+   
+    this.maxSpeed = 7;
+
+    this.speed = 0;
+
+    if(id == 1){
+    this.position = {
+
+        x: 10,
+        y: stageHeight/2 - this.height/2 
+    }
+    }
+else{
+this.position = {
+
+    x: this.stageWidth - this.width - 10,
+    y: stageHeight/2 - this.height/2 
+}
+}
+
+   
+}
+
+    drawPP(ctx){        
+   
+    ctx.fillStyle = "white";
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+
+}
+
+    drawGP(ctx){
+        ctx.clearRect(0,0,900,480);
+        ctx.fillStyle = "black";
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+
+    }
+
+    update(deltaTime){
+        
+
+        if(!deltaTime) return;
+
+        this.position.y += this.speed;
+       
+        if(this.position.y < 0) 
+        this.position.y =0;
+    
+     if(this.position.y > (this.stageHeight - this.height))   
+        this.position.y = this.stageHeight - this.height;
+
+
+
+}
+
+moveUp(){
+this.speed = -this.maxSpeed;
+
+}
+
+
+moveDown(){
+this.speed = this.maxSpeed;
+
+}
+
+stop(){
+
+this.speed = 0;
+
+}
+
+
+}
+
+        class InputHandler{
+           
+           constructor(ball,paddle1,paddle2){
+           document.addEventListener('keydown', event =>{
+
+               switch(event.keyCode){
+                   case 13: 
+                        ball.move();
+
+                   break;
+                   
+                   case 32: 
+                        ball.stop();
+                   
+                        break;
+                   
+               }
+           });
+
+           document.addEventListener('keydown', event =>{
+
+switch(event.keyCode){
+    
+    case 38: 
+        paddle2.moveUp();
+    break;
+    
+    case 40: 
+        paddle2.moveDown();
+    break;
+
+    case 87: 
+        paddle1.moveUp();
+    break;
+    
+    case 83: 
+        paddle1.moveDown();
+    break;
+}
+
+});
+
+document.addEventListener('keyup', event =>{
+
+switch(event.keyCode){
+    case 38: 
+
+    if(paddle2.speed < 0)   paddle2.stop();
+    
+        break;
+    
+    case 40: 
+    
+    if(paddle2.speed > 0)  paddle2.stop();
+    break;
+
+    case 87: 
+    
+    if (paddle1.speed < 0)  paddle1.stop();
+
+    break;
+    
+    case 83: 
+   
+    if(paddle1.speed > 0)  paddle1.stop();
+
+    break;
+}
+
+});
+
+
+}
+       }
+
+       
+        
+
+
+
+    class Ball{
+        
+        constructor(stageWidth, stageHeight){
+            
+            this.radius = 7;
+            this.stageWidth = 900;
+            this.stageHeight = 480;
+            this.initialXSpeed = 0;
+            this.initialYSpeed = 0;
+            this.maxSpeed = 4;
+            this.initialXPosition = stageWidth/2;
+            this.initialYPosition = stageHeight/2;
+            this.direction = 1;
+
+            this.position = {
+
+                x: this.initialXPosition,
+                y: this.initialYPosition
+            };
+
+        }
+
+
+        draw(ctx,color){
+    
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+        }
+
+        update(deltaTime){
+            if(!deltaTime) return;
+            
+            this.position.x += this.initialXSpeed * this.direction;
+            this.position.y += this.initialYSpeed * this.direction;
+            
+            
+        }
+
+        move(){
+            this.initialXSpeed = this.maxSpeed;
+            this.initialYSpeed = this.maxSpeed;
+
+        }
+
+        changeXDirection(){
+
+            this.initialXSpeed = -this.initialXSpeed *1.1;
+           
+            if(this.initialXSpeed > 16)
+                    this.initialXSpeed = 16;
+            if(this.initialXSpeed < -16)
+                    this.initialXSpeed = -16;        
+            
+
+        }
+
+        changeYDirection(){
+
+        this.initialYSpeed = -this.initialYSpeed *1.03 ;
+}
+
+
+        checkEdges(){
+            
+          
+            if(this.position.y > this.stageHeight - this.radius ||
+            this.position.y < 0 + this.radius)
+            this.changeYDirection();
+
+        }
+           stop(){
+               this.initialYSpeed = 0;
+               this.initialXSpeed = 0;
+           }
+
+           checkPaddle(paddle1, paddle2){
+           
+            if(this.position.x < paddle1.position.x + paddle1.width +10 &&
+           (this.position.y > paddle1.position.y && 
+           this.position.y < paddle1.position.y + paddle1.height))  
+                this.changeXDirection();
+
+            if(this.position.x > paddle2.position.x - this.radius &&
+           (this.position.y > paddle2.position.y && 
+            this.position.y < paddle2.position.y + paddle2.height))  
+                this.changeXDirection();
+
+           }
+           
+            checkPoints(){
+                
+                if(this.position.x < 0){
+
+                        w++;
+                        whitePoints.innerText = w ;
+
+                       
+                }   
+
+                if(this.position.x > this.stageWidth){
+                   
+                        b++;                      
+                        blackPoints.innerText = b ;
+                        
+                }   
+                
+            } 
+            checkRestart(){
+                    if(this.position.x < 0 || this.position.x > this.stageWidth){
+
+                        this.position.x = this.initialXPosition;
+                        this.position.y = this.initialYPosition;
+                        this.initialXSpeed = this.maxSpeed;
+                        this.initialYSpeed = this.maxSpeed;
+
+                    }
+
+            }
+            
+        
+        }
+
+
+        let canvas = document.querySelector('#stage');
+        let ctx = canvas.getContext('2d');
+        let blackPoints = document.querySelector('#blackPoints');
+        let whitePoints = document.querySelector('#whitePoints');
+        
+        let b = 0;
+        let w = 0;
+
+        blackPoints.innerText = "0";
+        whitePoints.innerText = "0";
+
+
+        const STAGE_WIDTH = 900;
+        const STAGE_HEIGHT = 480;
+        let ball = new Ball(STAGE_WIDTH, STAGE_HEIGHT);
+
+        let paddle1 = new Paddle(STAGE_HEIGHT,1);
+        let paddle2 = new Paddle(STAGE_HEIGHT,2);
+
+        paddle1.drawGP(ctx);
+        paddle2.drawPP(ctx);
+
+        let lastTime = 0; 
+
+        function gameLoop(timestamp){
+
+            let deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+
+            ctx.clearRect(0,0,STAGE_WIDTH, STAGE_HEIGHT); 
+            
+            paddle1.update(deltaTime);
+            paddle1.drawGP(ctx);
+
+
+            paddle2.update(deltaTime);
+            paddle2.drawPP(ctx);
+
+            ball.update(deltaTime);
+            ball.draw(ctx,"pink");
+            
+            
+            ball.checkEdges();
+            ball.checkPaddle(paddle1, paddle2);
+            ball.checkPoints();
+            ball.checkRestart();
+
+            requestAnimationFrame(gameLoop);
+        
+            
+            }
+    
+        gameLoop();
+        new InputHandler(ball,paddle1,paddle2);
+ 
+           
+    </script>
+</body>
+</html>
